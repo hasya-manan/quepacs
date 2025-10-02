@@ -11,7 +11,7 @@ import { useLoadingStore } from "@/lib/useLoadingStore";
 import { fontSans, fontMono } from "@/config/fonts";
 import "@/styles/globals.css";
 import { useAuthStore } from "@/stores/auth-store";
-import NProgressBar from '@/components/NProgress';
+import NProgressBar from "@/components/NProgress";
 
 export default function App({ Component, pageProps }: AppProps) {
   const router = useRouter();
