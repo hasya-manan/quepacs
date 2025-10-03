@@ -62,19 +62,17 @@ npm run seed
 
 - This executes the seeding script located at prisma/seed.ts.
 
-## Default Admin User:
+- Default Admin User:
+- Email: admin@example.com
+- Password: admin123
 
-# Email: admin@example.com
-
-# Password: admin123
-
-## Example Output
+# Example Output
 
 (node:19900) ExperimentalWarning: --experimental-loader may be removed in the future; instead use register():
 --import 'data:text/javascript,import { register } from "node:module"; import { pathToFileURL } from "node:url"; register("ts-node/esm", pathToFileURL("./"));'
 🌱 Seeding completed!
 
-## Why the Warning Appears
+# Why the Warning Appears
 
 - This happens because we are using ts-node with ESM loader:
 
@@ -100,7 +98,7 @@ node --loader ts-node/esm prisma/seed.ts
 
 ```
 
-# Keep ts-node installed as a dev dependency:
+- Keep ts-node installed as a dev dependency:
 
 ```bash
 
