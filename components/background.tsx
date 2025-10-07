@@ -3,7 +3,7 @@ export default function Background() {
     <div className="fixed h-[100vh] w-[100vw] bg-transparent">
       <div
         className="absolute 
-          bg-[radial-gradient(circle_farthest-side,rgba(255,105,180,0.2),rgba(255,255,255,0))] 
+          bg-[radial-gradient(circle_farthest-side,rgba(255,182,193,0.25),rgba(255,255,255,0))] 
          rounded-full 
          w-[500px] 
          h-[500px]
@@ -18,7 +18,7 @@ export default function Background() {
       />
       <div
         className="absolute 
-          bg-[radial-gradient(circle_farthest-side,rgba(255,105,180,0.2),rgba(255,255,255,0))] 
+          bg-[radial-gradient(circle_farthest-side,rgba(255,182,193,0.25),rgba(255,255,255,0))] 
          rounded-full 
          w-[500px] 
          h-[500px]
