@@ -5,7 +5,10 @@ import { useLoadingStore } from "@/lib/useLoadingStore";
 
 const JWT_SECRET = process.env.JWT_SECRET || "3289235de9a14ca3dfa6658bdfcb6a44";
 
-export default async function handler(req: NextApiRequest, res: NextApiResponse) {  
+export default async function handler(
+  req: NextApiRequest,
+  res: NextApiResponse
+) {
   if (req.method !== "POST") {
     return res.status(405).json({ error: "Method not allowed" });
   }
@@ -27,7 +30,7 @@ export default async function handler(req: NextApiRequest, res: NextApiResponse)
     }
 
     // Mark token as revoked
-    await prisma.jwt_token.updateMany({
+    await prisma.jwt_tokens.updateMany({
       where: {
         token,
         user_id: decoded.userId,

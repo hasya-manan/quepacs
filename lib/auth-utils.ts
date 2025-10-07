@@ -16,10 +16,10 @@ export interface UserSession {
 
 export function getTokenFromRequest(req: NextApiRequest): string | null {
   const authHeader = req.headers.authorization;
-  if (authHeader?.startsWith('Bearer ')) {
-    return authHeader.split(' ')[1];
+  if (authHeader?.startsWith("Bearer ")) {
+    return authHeader.split(" ")[1];
   }
-  
+
   return req.cookies.token || null;
 }
 
@@ -32,23 +32,25 @@ export function verifyToken(token: string): { userId: number } | null {
 }
 
 // NEW: Enhanced function that also checks database validity
-export async function verifyAndGetUser(token: string): Promise<UserSession | null> {
+export async function verifyAndGetUser(
+  token: string
+): Promise<UserSession | null> {
   try {
     const decoded = jwt.verify(token, JWT_SECRET) as { userId: number };
-    
+
     // Check if token exists in database and is not revoked
-    const tokenRecord = await prisma.jwt_token.findFirst({
-      where: { 
+    const tokenRecord = await prisma.jwt_tokens.findFirst({
+      where: {
         token,
         user_id: decoded.userId,
         is_revoked: false,
-        expires_at: { gt: new Date() }
+        expires_at: { gt: new Date() },
       },
-      include: { 
-        user: { 
-          include: { role: true } 
-        } 
-      }
+      include: {
+        user: {
+          include: { role: true },
+        },
+      },
     });
 
     if (!tokenRecord) {
@@ -69,9 +71,11 @@ export async function verifyAndGetUser(token: string): Promise<UserSession | nul
   }
 }
 
-export async function getUserFromRequest(req: NextApiRequest): Promise<UserSession | null> {
+export async function getUserFromRequest(
+  req: NextApiRequest
+): Promise<UserSession | null> {
   const token = getTokenFromRequest(req);
   if (!token) return null;
-  
+
   return await verifyAndGetUser(token);
 }

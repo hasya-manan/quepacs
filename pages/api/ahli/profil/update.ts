@@ -29,14 +29,14 @@ export default async function handler(
     });
 
     try {
-      const checkUserDetail = await prisma.userDetail.findUnique({
+      const checkUserDetail = await prisma.user_detail.findUnique({
         where: {
           userId: user.id,
         },
       });
 
       if (checkUserDetail) {
-        await prisma.userDetail.update({
+        await prisma.user_detail.update({
           where: {
             id: checkUserDetail.id,
           },
@@ -57,7 +57,7 @@ export default async function handler(
           },
         });
       } else {
-        await prisma.userDetail.create({
+        await prisma.user_detail.create({
           data: {
             userId: user.id,
             address1: data.address1,

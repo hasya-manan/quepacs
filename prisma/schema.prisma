@@ -7,16 +7,7 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model landing_page_content {
-  id           Int      @id @default(autoincrement())
-  section_name String   @db.VarChar(100)
-  content      String?  @db.Text
-  image_url    String?  @db.VarChar(2083)
-  is_active    Boolean? @default(true)
-  order_index  Int?     @default(0)
-}
-
-model jwt_token {
+model jwt_tokens {
   id         Int      @id @default(autoincrement())
   token      String   @unique @db.VarChar(500)
   user_id    Int
@@ -27,41 +18,91 @@ model jwt_token {
   user       user     @relation(fields: [user_id], references: [id], onDelete: Cascade)
 
   @@index([user_id])
-  @@map("jwt_tokens")
 }
 
-model user {
-  id             Int         @id @default(autoincrement())
-  email          String      @unique(map: "email") @db.VarChar(255)
-  username       String?     @unique(map: "username") @db.VarChar(100)
-  password_hash  String      @db.VarChar(255)
-  fullname       String      @db.VarChar(255)
-  nationality    String      @db.VarChar(50)
-  nric           String      @unique(map: "nric") @db.VarChar(20)
-  phone          String      @db.VarChar(15)
-  gender         String      @db.VarChar(10)
-  referral_code  String?     @db.VarChar(50)
-  email_verified DateTime?
-  status         String      @default("ACTIVE") @db.VarChar(20)
-  created_at     DateTime?   @default(now()) @db.Timestamp(0)
-  updated_at     DateTime?   @default(now()) @db.Timestamp(0)
-  role_id        Int
-  jwt_token      jwt_token[]
-  role           role        @relation(fields: [role_id], references: [id])
-
-  @@index([role_id], map: "user_role_id_fkey")
+model landing_page_content {
+  id           Int      @id @default(autoincrement())
+  section_name String   @db.VarChar(100)
+  content      String?  @db.Text
+  image_url    String?  @db.VarChar(2083)
+  is_active    Boolean? @default(true)
+  order_index  Int?     @default(0)
 }
 
-model UserDetail {
-  id   Int    @id @default(autoincrement())
-  name String @unique(map: "name") @db.VarChar(50)
+model notifications {
+  id        Int      @id @default(autoincrement())
+  title     String
+  body      String
+  data      String?  @db.LongText
+  userId    Int?
+  read      Boolean  @default(false)
+  createdAt DateTime @default(now())
+  user      user?    @relation(fields: [userId], references: [id], onDelete: Cascade)
 
-  @@map("user_detail")
+  @@index([userId])
+}
+
+model push_subscriptions {
+  id        Int      @id @default(autoincrement())
+  endpoint  String   @unique @db.VarChar(500)
+  keys      String   @db.LongText
+  userId    Int
+  userAgent String?  @db.VarChar(255)
+  createdAt DateTime @default(now()) @db.Timestamp(0)
+  updatedAt DateTime @default(dbgenerated("('0000-00-00 00:00:00')")) @db.Timestamp(0)
+  user      user     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId], map: "push_subscriptions_userId_fkey")
 }
 
 model role {
   id          Int     @id @default(autoincrement())
   name        String  @unique
   description String?
-  users       user[]
+  user        user[]
+}
+
+model user {
+  id                 Int                  @id @default(autoincrement())
+  email              String               @unique(map: "email") @db.VarChar(255)
+  username           String?              @unique(map: "username") @db.VarChar(100)
+  password_hash      String               @db.VarChar(255)
+  fullname           String               @db.VarChar(255)
+  nationality        String               @db.VarChar(50)
+  nric               String               @unique(map: "nric") @db.VarChar(20)
+  phone              String               @db.VarChar(15)
+  gender             String               @db.VarChar(10)
+  referral_code      String?              @db.VarChar(50)
+  email_verified     DateTime?
+  status             String               @default("ACTIVE") @db.VarChar(20)
+  created_at         DateTime?            @default(now()) @db.Timestamp(0)
+  updated_at         DateTime?            @default(now()) @db.Timestamp(0)
+  role_id            Int
+  jwt_tokens         jwt_tokens[]
+  notifications      notifications[]
+  push_subscriptions push_subscriptions[]
+  role               role                 @relation(fields: [role_id], references: [id])
+  user_detail        user_detail?
+
+  @@index([role_id], map: "user_role_id_fkey")
+}
+
+model user_detail {
+  id                    Int       @id @default(autoincrement())
+  userId                Int       @unique
+  address1              String?
+  address2              String?
+  address3              String?
+  postcode              String?   @db.VarChar(5)
+  city                  String?
+  state                 String?
+  country               String?   @default("Malaysia")
+  phoneHome             String?   @db.VarChar(20)
+  emergencyContactName  String?
+  emergencyContactPhone String?   @db.VarChar(20)
+  dateOfBirth           DateTime?
+  placeOfBirth          String?
+  photo                 Bytes?
+  maritalStatus         String?   @db.VarChar(20)
+  user                  user      @relation(fields: [userId], references: [id], onDelete: Cascade)
 }
