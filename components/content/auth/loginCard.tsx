@@ -22,9 +22,9 @@ import { useLoadingStore } from "@/lib/useLoadingStore";
 export default function loginCard() {
   const [isVisible, setIsVisible] = useState(false);
   const toggleVisibility = () => setIsVisible(!isVisible);
-    const {loading, setLoading} = useLoadingStore();
+  const { loading, setLoading } = useLoadingStore();
 
-    const {
+  const {
     login,
     isAuthenticated,
     getDashboardRoute,
@@ -44,8 +44,8 @@ export default function loginCard() {
     };
 
     try {
-      const res = await login(data); 
-      
+      const res = await login(data);
+
       if (res.success || !res.error) {
         addToast({
           title: "Berjaya",
@@ -53,8 +53,7 @@ export default function loginCard() {
           color: "success",
         });
         router.push(getDashboardRoute());
-      }
-      else if (!res.success || res.error) {
+      } else if (!res.success || res.error) {
         addToast({
           title: "Gagal",
           description: "Log masuk tidak berjaya: " + res.error,
@@ -62,7 +61,7 @@ export default function loginCard() {
         });
         console.error("Login failed:", res.error);
         return;
-      } 
+      }
     } catch (err: any) {
       addToast({
         title: "Gagal",
@@ -159,4 +158,4 @@ export default function loginCard() {
       </Card>
     </section>
   );
-};
+}

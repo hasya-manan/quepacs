@@ -39,9 +39,10 @@ export const getServerSideProps: GetServerSideProps = async (context) => {
     };
   }
 
-  const userDetails = await prisma.userDetail.findUnique({
+  const userDetails = await prisma.user_detail.findUnique({
     where: { userId: user.id },
   });
+  console.log(userDetails);
 
   const mappedUserData = {
     fullname: userData.fullname,
